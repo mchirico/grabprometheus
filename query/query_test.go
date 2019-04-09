@@ -8,6 +8,18 @@ import (
 	"time"
 )
 
+func TestPullData(t *testing.T) {
+	url := "http://httpbin.org/get"
+	b, err := PullData(url)
+	if err != nil {
+		t.Fatalf("Maybe no Internet?")
+	}
+	if strings.Contains(string(b), "https://httpbin.org/get") != true {
+		t.Fatalf("PullData isn't working")
+	}
+
+}
+
 func TestExtractJson(t *testing.T) {
 
 	dat, err := ioutil.ReadFile("../fixtures/sample")
