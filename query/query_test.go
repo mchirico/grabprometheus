@@ -10,7 +10,7 @@ import (
 
 func TestExtractJson(t *testing.T) {
 
-	dat, err := ioutil.ReadFile("../fixtures/sample.json")
+	dat, err := ioutil.ReadFile("../fixtures/sample")
 	if err != nil {
 		t.Fatalf("%v\n", err)
 	}
@@ -36,16 +36,29 @@ func TestExtractJson(t *testing.T) {
 	fmt.Printf("len: %d\n", len(p.Data.Result[0].Values))
 }
 
-func TestWriteCSV(t *testing.T) {
+func TestWriteCSVmax(t *testing.T) {
 
 	dat, err := ioutil.ReadFile("../fixtures/5d")
 	if err != nil {
-		t.Fatalf("%v\n", err)
+		t.Logf("We're on travis. No need to test, yet: %v\n", err)
+		dat, _ = ioutil.ReadFile("../fixtures/sample")
 	}
-
 	p, _ := ExtractJson(dat)
 
-	WriteCSV("junk.csv", p)
+	WriteCSVmax("junk.csv", p)
+
+}
+
+func TestWriteCSVmin(t *testing.T) {
+
+	dat, err := ioutil.ReadFile("../fixtures/5d")
+	if err != nil {
+		t.Logf("We're on travis. No need to test, yet: %v\n", err)
+		dat, _ = ioutil.ReadFile("../fixtures/sample")
+	}
+	p, _ := ExtractJson(dat)
+
+	WriteCSVmin("junk.csv", p)
 
 }
 

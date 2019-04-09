@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math"
 	"net/http"
 	"os"
 	"time"
@@ -71,7 +72,7 @@ func GetTime(i interface{}) time.Time {
 
 }
 
-func WriteCSV(file string, p prom) error {
+func WriteCSVmax(file string, p prom) error {
 
 	f, err := os.Create(file)
 	if err != nil {
@@ -114,6 +115,54 @@ func WriteCSV(file string, p prom) error {
 
 			} else {
 				f.WriteString(",")
+			}
+
+		}
+		f.WriteString("\n")
+	}
+
+	return nil
+
+}
+
+func WriteCSVmin(file string, p prom) error {
+
+	f, err := os.Create(file)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	// Find min
+	min := math.MaxInt32
+	for _, v := range p.Data.Result {
+		if min > len(v.Values) {
+			min = len(v.Values)
+		}
+	}
+
+	for idx := 0; idx < min; idx++ {
+		if idx == 0 {
+			for i, v := range p.Data.Result {
+				if i == 0 {
+					f.WriteString("date")
+				}
+				f.WriteString(fmt.Sprintf(",%s", v.Metric.Hostname))
+			}
+			f.WriteString("\n")
+		}
+
+		for i, v := range p.Data.Result {
+
+			if i == 0 {
+
+				dateTime := fmt.Sprintf("%s", GetTime(v.Values[idx][0]).Format("2006-01-02 15:04:05"))
+				f.WriteString(dateTime)
+
+			}
+
+			if len(v.Values[idx]) >= 2 {
+				f.WriteString(fmt.Sprintf(",%v", v.Values[idx][1]))
 			}
 
 		}
