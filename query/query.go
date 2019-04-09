@@ -102,7 +102,7 @@ func WriteCSV(file string, p prom) error {
 
 			if i == 0 {
 				if len(v.Values) > idx {
-					dateTime := fmt.Sprintf("%s", GetTime(v.Values[idx][0]))
+					dateTime := fmt.Sprintf("%s", GetTime(v.Values[idx][0]).Format("2006-01-02 15:04:05"))
 					f.WriteString(dateTime)
 				}
 			}
